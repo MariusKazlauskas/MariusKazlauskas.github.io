@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Streaming out of promised callback hell</title>
+
+		<link rel="stylesheet" href="../reveal/css/reveal.css">
+		<link rel="stylesheet" href="../reveal/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal/css/print/pdf.css' : '../reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h3>Streaming out of promised callback hell</h3>
+          <div style="text-align: left;" class="fragment">
+            <p>Marius Kazlauskas (<a href="https://twitter.com/UgiBugiVugi" target="_blank">@ugibugivugi</a>)</p>
+            <p>Lead developer at <a href="http://www.zenitech.co.uk/" target="_blank">Zenitech</a></p>
+          </div>
+          
+        </section>
+        
+				
+        <section>
+          Design patterns
+          
+          <section data-markdown>
+            ## Iterable pattern
+            
+            **Consumer** iterates over collection and retrieves data.
+            Pull-based pattern.
+          </section>
+          
+          <section data-markdown>
+            ## Observer pattern
+
+            **Producer** gives some data once at a time to **consumer**.
+            Push-based pattern.
+          </section>
+          
+          <section data-markdown>
+            ## Observable pattern
+            
+            **Observable** data type, introduced by **[rx](http://reactivex.io/)**. Proper way to model events.
+          </section>
+          
+        </section>
+        
+        <section data-background="observable.jpg" data-background-size="600px"></section>
+        
+        <section data-markdown>
+          ### Reactive programming
+          **Reactive**  
+          \rē-ˈak-tiv\  
+          done in response to a problem or situation: acting to problems when they occur instead of doing something to prevent them   
+          *‒ merriam-webster.com*
+        </section>
+          
+        <section>
+          Observable pattern
+          
+          <section>
+            <p class="fragment">What's does a mouse drag event have in common with an Array of values?</p>
+            <p style="align:right" class="fragment">The answer to this question may surprise some of you:<br>
+            - they are both collections.</p>
+
+            <p class="fragment">[ {x:45}, {x:62}, {x:24} ] -> array</p>
+
+            <p class="fragment">mouseMoves: [..{x:45}.....{x:62}...{x:24}........{x:55}..] -> collection over time</p>
+
+            <p class="fragment">Array methods -> async expressive programs</p>
+          </section>
+          
+          <section data-markdown>
+            - observable `===` collection over time
+            - observables can model events, data requests and animation.
+
+            Typically **consumer** provides 3 callbacks for the producer:
+            - next
+            - error
+            - compete
+            
+            ```
+            const subscription = producer.subscribe(next, error, complete);
+            ```
+          </section>
+          
+          <section data-markdown>
+            #### Hot/Cold observables
+            - cold by default
+            - **cold**: 1 producer for 1 consumer
+            - **hot**: 1 producer for many consumers (made via ```.share()```)
+          </section>
+          
+        </section>
+        
+        <section>Async
+          <section>
+            <h2>Solving async problems</h2>
+            <p class="fragment">Async is hard.</p>
+
+            <ul class="fragment">
+              <li>While trying to handle it with callbacks you end up having some state (flags to track callbacks, etc)
+              <li>try/catch is mostly useless in async context
+              <li>memory leaks
+              <li>race conditions
+              <li>complex state machine
+            </ul>
+          </section>
+          
+          <section>
+            <h3>Types of async on the front-end</h3>
+            <ul>
+              <li>DOM events (0..N values)
+              <li>Animations (cancelable)
+            <li>AJAX (1 value) <span class="fragment">XHR can be aborted.</span>
+            <li>WebSockets (0..N values)
+            <li>Server Sent Events (0..N values)
+            <li>Alternative inputs (voice, joystick, etc) (0..N values)
+          </section>
+          
+          <section data-markdown>
+            ### Promises
+            - read-only view to future value
+            - success and error semantics via `.then()`
+            - Not lazy. By the time you have the promise it's on it's way to be resolved.
+            - Immutable and un-cancelable. Promise will resolve or reject only once.
+          </section>
+          
+          <section data-markdown>
+            ### Observables
+            - Streams / sets / collections
+            - any number of things (0..N)
+            - any amount of time
+            - *cold* observables are lazy, and will not generate a value until subscribed to
+            - can be **unsubscribed** from, meaning the data producer will be informed to stop generating data and tear-down.
+            - since they are lazy, they can be retried
+            - gracefully propagate and handle asynchronous exceptions
+          </section>
+        </section>
+        
+        <section>
+          Streams
+          
+          <section data-markdown>
+            - streams ~ collections
+            - streams in nodejs (fs, gulp, etc)
+            - streaming in general (video/audio)
+          </section>
+          
+          <section>
+            <h3>Real life examples</h3>
+            <ul>
+              <li class="fragment"><a href="https://docs.google.com/spreadsheets/d/1QQ0GYam88zyokIiXQYG_3wljMb7qnkvQj5SSdF_ekAY/edit#gid=0" target="_blank">Spread sheet</a>
+              <li class="fragment">Real time processing systems
+              <li class="fragment">Power circuits
+              <li class="fragment">Sewage systems
+              <li class="fragment">Rivers
+            </ul>
+          </section>
+          
+        </section>
+        
+        <section>
+          Examples
+          
+          <section data-markdown>
+            With bigger datasets it's faster to transform to observable since the values are passed one by one and no mid-level arrays are saved and produced
+          </section>
+          
+          <section data-markdown>
+            ```
+            const initialArray = [1,2,3,4,5];
+            const newArray = initialArray
+                .map(x => x*2) // [2,4,6,8,10]
+                .filter(x => x > 5);
+                
+            console.log(newArray); // [6,8,10]
+            
+            const number$ = Rx.Observable.of(initialArray); // -1-2-3-4-5|->
+            const result$ = number$
+                      .map(x => x*2)
+                      .filter(x => x > 5)
+                      .subscribe(x => console.log(x));
+                      
+            // 6
+            // 8
+            // 10
+            ```
+          </section>
+          <section data-markdown>
+            ### Drag and drop
+            ```
+            mouseDown$
+              .map(mousedown => 
+                document.mouseMove$
+                  .takeUntill(document.MouseUp$)
+              )
+            ```
+          </section>
+
+          <section data-markdown>
+            #### Autocomplete  
+            - race condition if 2 request are sent off in a short period of time
+            - don't want too many requests
+
+            ```
+            keyPress$
+              .debounce(250)
+              .map(query =>
+                getJSON('/api?q='+query)
+                .retry(3)
+                .takeUntill(keyPress$)
+              )
+              .flatten()
+            ```
+          </section>
+          
+          <section>
+            <h3>Other live examples</h3>
+            <ul>
+              <li><a href="http://jsbin.com/husiyul/embed?js,output" target="_blank">Counter</a></li>
+              <li><a href="http://jsbin.com/nucepu/embed?js,output" target="_blank">BMI</a></li>
+            </ul>
+          </section>
+
+          </section>
+          
+          <section>
+            <a href="http://rxmarbles.com/" target="_blank">Marble diagrams</a>
+          </section>
+          
+          <section>
+            Libraries
+            <section data-markdown>
+              - ReactiveX (https://github.com/ReactiveX, http://reactivex.io/):
+                - RxJS, Rx.NET, RxCpp, Rx.rb, RxPy, RxJava, etc.
+              - most.js
+              - xstream
+              - bacon.js
+              - kefir.js
+              - flyd
+              - others..
+            </section>
+          
+            <section data-markdown>
+              ### Operators
+              - map
+              - reduce / scan / fold
+              - merge
+              - combine
+              - zip
+              - etc.
+            </section>
+          
+            <section data-markdown>
+              ### Factories
+              - .from
+              - .fromEvent
+              - .of
+              - .empty
+              - etc.
+            </section>
+          
+        </section>
+        
+        </section>
+        
+        <section>
+          Summary
+          <section data-markdown>
+            ### Good parts
+            - eliminate memory leaks caused by neglecting to unsubscribe from events
+            - solve race conditions
+            - stateless code through the middle, only state-full points are inputs and outputs.
+            - median data store unneeded
+            - coordinate and sequence multiple Ajax requests
+            - reactively update UI's in response to data changes
+          </section>
+          
+          <section>
+            <h3>Bad parts</h3>
+            <ul>
+              <li>learning curve
+              <li>unbounded buffers (for example <a href="http://rxmarbles.com/#zip" target="_blank">.zip</a> operator)
+              <li>loads of operators to remember <span class="fragment">(or are there?)</span>
+            </ul>
+          </section>
+          
+          <section>
+            <h3>Heavy Observable stream users</h3>
+            <ul>
+              <li>Netflix
+              <li>Microsoft (started rx)
+              <li>Angular2
+              <li><a href="http://reactivex.io/" target="_blank">Reactivex.io</a></li>
+            </ul>
+          </section>
+          
+          <section>
+            <h3>References (I)</h3>
+            <ul>
+              <li><a href="https://www.youtube.com/watch?v=a8W5VVGO-jA" target="_blank">Asynchronous JavaScript at Netflix by Matthew Podwysowski at JSConf Budapest 2015</a>
+              <li><a href="https://www.youtube.com/watch?v=XRYN2xt11Ek" target="_blank">Netflix JavaScript Talks - Async JavaScript with Reactive Extensions</a>
+              <li><a href="https://www.youtube.com/watch?v=gawmdhCNy-A" target="_blank">Asynchronous Programming at Netflix - @Scale 2014 - Web</a>
+              <li><a href="https://www.youtube.com/watch?v=COviCoUtwx4" target="_blank">Netflix JavaScript Talks - RxJS Version 5</a>
+              <li><a href="https://www.youtube.com/watch?v=KOOT7BArVHQ" target="_blank">RxJS In-Depth – Ben Lesh</a>
+              <li><a href="https://www.youtube.com/watch?v=dwP1TNXE6fc" target="_blank">Reactive Programming Overview (Jafar Husain from Netflix)</a>
+            </ul>
+          </section>
+        
+          <section>
+            <h3>References (II)</h3>
+            <ul>
+              <li><a href="https://www.youtube.com/watch?v=H948xd7n6k0" target="_blank">Brian Holt - Promise to Not Use Promises: Observables in ES.next</a>
+              <li><a href="https://www.youtube.com/watch?v=uQ1zhJHclvs" target="_blank">André Staltz (@andrestaltz): You will learn RxJS at ng-europe 2016</a>
+              <li><a href="https://gist.github.com/staltz/868e7e9bc2a7b8c1f754" target="_blank">The introduction to Reactive Programming you've been missing</a>
+              <li><a href="http://staltz.com/" target="_blank">André Staltz</a>
+              <li><a href="https://github.com/cujojs/most" target="_blank">Most</a>
+              <li><a href="http://reactivex.io/" target="_blank">Rx</a>
+              <li><a href="http://rxmarbles.com" target="_blank">Rx Marbles</a>
+            </ul>
+          </section>
+          
+        </section>
+        
+        <section>
+          <h3>Thanks for listening!</h3>
+          <p class="fragment">questions?</p>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="../reveal/lib/js/head.min.js"></script>
+		<script src="../reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../reveal/plugin/markdown/marked.js' },
+					{ src: '../reveal/plugin/markdown/markdown.js' },
+					{ src: '../reveal/plugin/notes/notes.js', async: true },
+					{ src: '../reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
