@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Introduction to Cycle.js</title>
+
+		<link rel="stylesheet" href="../reveal/css/reveal.css">
+		<link rel="stylesheet" href="../reveal/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal/lib/css/zenburn.css">
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-89193531-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal/css/print/pdf.css' : '../reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h3>Introduction to Cycle.js</h3>
+          <div style="text-align: left;" class="fragment">
+            <p>Marius Kazlauskas (<a href="https://twitter.com/UgiBugiVugi" target="_blank">@ugibugivugi</a>)</p>
+            <p>Lead developer at <a href="http://www.zenitech.co.uk/" target="_blank">Zenitech</a></p>
+          </div>
+          
+        </section>
+        
+				
+        <section>
+          User as a function
+          
+          <section data-markdown>
+            ```
+                function user(sources) {
+                  const { visual, sound, touch, smell, taste } = sources; // senses as inputs
+
+                  // brain processes input data
+
+                  return {
+                    intentions, // of actions, reactions, etc.
+                    mouse,
+                    touch,
+                    keyboard,
+                    sensor data,
+                    etc,
+                  }
+                }
+            ```
+          </section>
+          
+         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_9.jpg?1431626286" data-background-size="600px">
+         </section> 
+         
+         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_13.jpg?1431626286" data-background-size="600px"></section>
+         
+         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_12.jpg?1431626286" data-background-size="600px"></section> 
+         
+         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_21.jpg?1431626286" data-background-size="600px"></section> 
+          
+          <section data-markdown>
+            ## A few insights
+
+            * UIs are cycles
+            * UIs are functions
+            * UIs are async
+            * UIs symetric
+            * User is a function
+          </section>
+          
+        </section>
+          
+        <section>
+          Feedback loop
+          
+          <section data-markdown>
+            ```
+                const screenEvents = compooter(interactionEvents);
+                const interactionEvevts = user(screenEvents);
+            ```
+          </section>
+          
+          <section data-markdown>
+            ```
+                const interactionEvents = user(compooter(interactionEvents));
+            ```
+          </section>
+          
+          <section data-markdown>
+            ```
+                const interactionEventsProxy = makeEmptyEventStream();
+                
+                const screenEvents = compooter(interactionEvents);
+                const interactionEvents = user(screenEvents);
+                
+                interactionEvents.subscribe((event) => {
+                  interactionEventsProxy.next(event);
+                })
+            ```
+          </section>
+          
+        </section>
+        
+        <section>Cycle.js architectural pattern
+            
+          <section data-background="http://staltz.com/img/mvi-unidir-ui-arch.jpg" data-background-size="600px"></section>
+         
+          <section data-background="http://staltz.com/img/dialogue-mvi-unidir-ui-arch.jpg" data-background-size="600px"></section> 
+         
+          <section data-background="http://staltz.com/img/single-dialogue-unidir-ui-arch.jpg" data-background-size="600px"></section>
+          
+          <section data-background="http://staltz.com/img/nested-dialogues-unidir-ui-arch.jpg" data-background-size="600px"></section>
+          
+        </section>
+        
+        <section>
+          Components
+          
+          <section>
+            <p>Any Cycle.js app can be reused as a component in a larger Cycle.js app.</p>
+
+            <ul>
+              <li><a href="https://jsbin.com/napoke/2/edit?js,output" target="_blank">Labeled slider component example</a></li>
+              <li><a href="https://jsbin.com/yojoho/2/edit?js,output" target="_blank">Labeled slider component usage example</a></li>
+            </ul>
+          </section>
+          
+          <section>
+            <h3>Component isolation</h3>
+            <p class="fragment">@cycle/isolate</p>
+            
+            <p class="fragment">isolate(dataflowComponent, [scope])</p>
+            
+            <ul class="fragment">
+              <li>A component’s sources are not affected by other components’ sources.</li>
+              <li>A component’s sinks do not affect other components’ sinks.</li>
+            </ul>
+            
+            <a class="fragment" href="https://jsbin.com/seqehat/2/edit?js,output" target="_blank">BMI calculator example</a>
+          </section>
+          
+        </section>
+        
+        <section>
+          Drivers
+          
+          <section data-markdown>
+            Drivers are functions that listen to sink streams (their input), perform imperative side effects, and may return source streams (their output).
+          </section>
+          
+          <section data-markdown>
+            ## DOM driver
+            - takes in virtual tree representation
+            - takes care of the rendering
+            - provides DOM events
+          </section>
+          
+          <section data-markdown>
+            ## HTTP driver
+            - takes url
+            - provides loaded resources
+          </section>
+          
+        </section>
+        
+        <section>
+          Other live examples + some tooling
+        </section>
+        
+        
+        <section>
+          <h3>References</h3>
+          <ul>
+            <li><a href="https://cycle.js.org/" target="_blank">Cycle.js homepage</a>
+            <li><a href="https://www.youtube.com/watch?v=uNZnftSksYg" target="_blank">Cycle.js and functional reactive user interfaces | Andre Staltz | Reactive 2015</a>
+            <li><a href="https://egghead.io/courses/cycle-js-fundamentals" target="_blank">Egghead.io course: Cycle.js Fundamentals</a>
+            <li><a href="https://www.youtube.com/watch?v=1zj7M1LnJV4" target="_blank">What if the user was a function?</a>
+            <li><a href="http://staltz.com/unidirectional-user-interface-architectures.html" target="_blank">UNIDIRECTIONAL USER INTERFACE ARCHITECTURES</a>
+          </ul>
+        </section>
+        
+        
+        <section>
+          <h3>Thanks for listening!</h3>
+          <p class="fragment">questions?</p>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="../reveal/lib/js/head.min.js"></script>
+		<script src="../reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../reveal/plugin/markdown/marked.js' },
+					{ src: '../reveal/plugin/markdown/markdown.js' },
+					{ src: '../reveal/plugin/notes/notes.js', async: true },
+					{ src: '../reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
