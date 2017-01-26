@@ -37,7 +37,6 @@
 			<div class="slides">
 				<section>
           <h3>Introduction to Cycle.js</h3>
-          <img src="https://cycle.js.org/img/cyclejs_logo.svg" style="background:none;border:none" height="150" width="150">
           <div style="text-align: left;" class="fragment">
             <p>Marius Kazlauskas (<a href="https://twitter.com/UgiBugiVugi" target="_blank">@ugibugivugi</a>)</p>
             <p>Lead developer at <a href="http://www.zenitech.co.uk/" target="_blank">Zenitech</a></p>
@@ -45,36 +44,6 @@
           
         </section>
         
-        <section>
-          Functions
-          
-          <section data-markdown>
-            In mathematics, a **function** is a relation between a set of inputs and a set of permissible outputs with the property that each input is related to exactly one output.
-          </section>
-          
-         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_13.jpg?1431626286" data-background-size="600px"></section>
-          
-          <section data-markdown>
-            ```
-                function compooter(sources) {
-                  const { mouse, keyboard, sound, sesnor data, etc } = sources; // senses as inputs
-
-                  // brain processes input data
-                  
-                  const result = {
-                    visual,
-                    audio,
-                    heat,
-                    bad smell,
-                    etc,
-                  }
-
-                  return result; // of computations
-                }
-            ```
-          </section>
-          
-        </section>
 				
         <section>
           User as a function
@@ -85,22 +54,23 @@
                   const { visual, sound, touch, smell, taste } = sources; // senses as inputs
 
                   // brain processes input data
-                  
-                  const intentions = {
+
+                  return {
+                    intentions, // of actions, reactions, etc.
                     mouse,
                     touch,
                     keyboard,
                     sensor data,
                     etc,
                   }
-
-                  return intentions; // of actions, reactions, etc.
                 }
             ```
           </section>
           
          <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_9.jpg?1431626286" data-background-size="600px">
          </section> 
+         
+         <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_13.jpg?1431626286" data-background-size="600px"></section>
          
          <section data-background="https://speakerd.s3.amazonaws.com/presentations/029627c0e7994c7eb9dad19bbaede845/slide_12.jpg?1431626286" data-background-size="600px"></section> 
          
@@ -138,7 +108,7 @@
             ```
                 const interactionEventsProxy = makeEmptyEventStream();
                 
-                const screenEvents = compooter(interactionEventsProxy);
+                const screenEvents = compooter(interactionEvents);
                 const interactionEvents = user(screenEvents);
                 
                 interactionEvents.subscribe((event) => {
@@ -147,10 +117,6 @@
             ```
           </section>
           
-        </section>
-        
-        <section>
-          Cycle.js ties in the I/O of comonents and drivers and is used to manage stream libraries under the hood, thus it can be called functional reactive.
         </section>
         
         <section>Cycle.js architectural pattern
@@ -177,19 +143,6 @@
             </ul>
           </section>
           
-          <section data-markdown>
-            Passing properties as reactive streams by nature
-            
-            ```
-              function person(parent) {
-                const {manager: {ownName}} = parent
-                ownName.subscribe((name) => {
-                  console.log('person got new name', name)
-                })
-              }
-            ```
-          </section>
-          
           <section>
             <h3>Component isolation</h3>
             <p class="fragment">@cycle/isolate</p>
@@ -213,8 +166,6 @@
             Drivers are functions that listen to sink streams (their input), perform imperative side effects, and may return source streams (their output).
           </section>
           
-          <section data-background="./drivers.svg" data-background-size="600px"></section>
-          
           <section data-markdown>
             ## DOM driver
             - takes in virtual tree representation
@@ -231,64 +182,7 @@
         </section>
         
         <section>
-          Cycle.js is diverse and may run with any stream libraries.
-          <p class="fragment">Default options:</p>
-          <ul class="fragment">
-            <li>xstream
-            <li>most
-            <li>rx (v4)
-            <li>rxjs (v5)
-          </ul>
-          <p class="fragment">Otherwise it's possible to write an adapter from any other library</p>
-        </section>
-        
-        <section data-markdown>
-          Also Cycle.js Supports
-          
-            - Virtual DOM rendering
-            - Server-side rendering
-            - JSX
-            - TypeScript
-            - React Native
-            - Time traveling
-            - Routing with the History API
-        </section>
-        
-        <section>
-          Usefull libs
-          
-          <section>
-            <ul>
-              <li><a href="https://github.com/cyclejs/collection" target="_blank">Cyclejs/collections</a>
-              <li><a href="https://github.com/cyclejs-community/redux-cycle-middleware" target="_blank">Redux-cycle-middleware</a>
-              <li><a href="https://github.com/staltz/cycle-onionify" target="_blank">Cycle onionify</a>
-            </ul>
-          </section>
-          
-          <section data-background="https://raw.githubusercontent.com/staltz/cycle-onionify/master/diagram.png"  data-background-size="1000px">
-          </section>
-          <section data-markdown>
-            Cycle onionify
-            
-            ```
-              stateA$ // Emits `{visitors: {count: 300}}}`
-              stateB$ // Emits `{count: 300}`
-              stateC$ // Emits `300`
-
-              reducerC$ // Emits `function reducerC(count) { return count + 1; }`
-              reducerB$ // Emits `function reducerB(visitors) { return reducerC(visitors); }`
-              reducerA$ // Emits `function reducerA(appState) { return reducerB(appState); }`
-            ```
-          </section>
-
-        </section>
-        
-        <section>
           Other live examples + some tooling
-        </section>
-        
-        <section>
-          <a href="http://cycleconf.com/" target="_blank">CycleConf 2017</a>,  21st – 23rd of April 2017 @ Stockholm
         </section>
         
         
@@ -300,7 +194,6 @@
             <li><a href="https://egghead.io/courses/cycle-js-fundamentals" target="_blank">Egghead.io course: Cycle.js Fundamentals</a>
             <li><a href="https://www.youtube.com/watch?v=1zj7M1LnJV4" target="_blank">What if the user was a function?</a>
             <li><a href="http://staltz.com/unidirectional-user-interface-architectures.html" target="_blank">UNIDIRECTIONAL USER INTERFACE ARCHITECTURES</a>
-            <li><a href="https://glebbahmutov.com/blog/why-use-reactive-streams-for-components/" target="_blank">Why use reactive streams for components?</a>
           </ul>
         </section>
         
