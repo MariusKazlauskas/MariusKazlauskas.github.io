@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Recap of CycleConf</title>
+
+		<link rel="stylesheet" href="../reveal/css/reveal.css">
+		<link rel="stylesheet" href="../reveal/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal/lib/css/zenburn.css">
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-89193531-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal/css/print/pdf.css' : '../reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h3>Recap of CycleConf</h3>
+          <img src="https://cycle.js.org/img/cyclejs_logo.svg" style="background:none;border:none" height="150" width="150">
+        </section>
+        
+        <section>
+          Talks: Day 1
+          
+          <section data-markdown>
+            Opening Keynote
+          </section>
+          
+          <section>
+            Nick Johnstone: The Hitchhiker’s Guide to Cycle.js
+            
+            <iframe src="https://player.vimeo.com/video/217444733" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+          <section>
+            Jan van Brügge: Property based testing in Cycle.js
+            
+            <iframe src="https://player.vimeo.com/video/217133774" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+        </section>
+        
+        <section>
+          Talks: Day 2
+          
+          <section>
+            <p>Raquel Moss: Organising your code in Cycle.js</p>
+            
+            <iframe src="https://player.vimeo.com/video/216801948" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+          <section>
+            <p>Justin Woo: Simpler Cycling with Megadrivers</p>
+            
+            <iframe src="https://player.vimeo.com/video/216814949" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+          <section>
+            Gleb Bahmutov: Web application quality beyond testing
+            
+            <iframe src="https://player.vimeo.com/video/216829554" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+        </section>
+        
+        <section>
+          Talks: Day 3
+          
+          <section>
+            <p>Aron Nyborg Allen:  Multi-threading in Cycle.js</p>
+            
+            <iframe src="https://player.vimeo.com/video/216843887" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+          <section>
+            <p>Andre Staltz: The Past, Present, and Future of Cycle.js. Part I</p>
+            
+            <iframe src="https://player.vimeo.com/video/216787869" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+          <section>
+            Andre Staltz: The Past, Present, and Future of Cycle.js. Part II
+            
+            <iframe src="https://player.vimeo.com/video/216975979" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          </section>
+          
+        </section>
+        
+        <section>
+          Hackaton
+          
+          https://github.com/aronallen/cycle-sandbox
+          
+        </section>
+        
+        <section>
+          <h3>Thanks for listening!</h3>
+          <p class="fragment">questions?</p>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="../reveal/lib/js/head.min.js"></script>
+		<script src="../reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../reveal/plugin/markdown/marked.js' },
+					{ src: '../reveal/plugin/markdown/markdown.js' },
+					{ src: '../reveal/plugin/notes/notes.js', async: true },
+					{ src: '../reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
