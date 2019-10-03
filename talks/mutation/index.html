@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Mutation Testing in NodeJS</title>
+
+		<link rel="stylesheet" href="../reveal/css/reveal.css">
+		<link rel="stylesheet" href="../reveal/css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal/lib/css/zenburn.css">
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-89193531-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../reveal/css/print/pdf.css' : '../reveal/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h3>Mutation Testing in NodeJS</h3>
+          <div style="text-align: left;" class="fragment">
+            <p>Marius Kazlauskas (<a href="https://twitter.com/UgiBugiVugi" target="_blank">@ugibugivugi</a>)</p>
+            <p>Principal engineer at <a href="https://www.siteminder.com/" target="_blank">SiteMinder</a></p>
+          </div>
+          
+        </section>
+          
+          <section>
+            Mutation
+            
+            <section>
+							"A mutation is a change in the sequence of an organism's genetic material."
+						</section>
+						
+	          <section data-markdown>
+	            ## Evolutionary programming 
+						
+							such as Genetic Algorithms
+
+	            A heuristic method for solving both constrained and unconstrained optimization problems that is based on natural selection, the process that drives biological evolution.
+	          </section>
+						
+	          <section data-markdown>
+	            ## Mutation Testing
+
+	            Mutation Testing is a type of software testing where we mutate (change) certain statements in the source code and check if the test cases are able to find the errors.
+	          </section>
+						
+	          <section data-markdown>
+	            ## Automatic program repair
+
+	            automatic repair of software bugs without the intervention of a human programmer.
+	          </section>
+					</section>
+					
+        </section>
+
+        <section>
+          Abstract syntax tree (AST)
+
+					<section>
+						A finite, labeled, directed tree used in computer science
+					</section>
+					
+					<section data-background="ast.png" data-background-size="870px"></section>
+					
+					<section data-markdown>
+						```
+						while (x < 20) {
+							x = x + y * 2 
+						}
+						```
+					</section>
+					
+	        <section data-markdown>
+						[Esprima](https://esprima.org/) - ECMAScript parser used for:
+						- transpilers
+						- code coverage
+	        </section>
+					
+        </section>
+          
+        <section>
+          Test quality improvement
+          
+          <section>
+            <p class="fragment">Is code coverage enough?</p>
+            <p style="align:right" class="fragment">Well... code coverage doesn't really tell you everything about the effectiveness of your tests.</p>
+
+          </section>
+				
+				</section>
+          
+        <section>
+					<h2>Stryker</h2>
+					<img src="stryker-80x80.png">
+					<p class="fragment">"Today, Stryker supports most JavaScript projects. It includes support for TypeScript, React, Angular, VueJS and NodeJS."<span class="fragment"> - so they say.</span></p>
+        </section>
+				
+				<section data-markdown>
+					- [Example app](https://stryker-mutator.io/robobar-example/#!/)
+					- [Code coverage report](https://stryker-mutator.io/robobar-example/reports/coverage/index.html)
+					- [Mutation report](https://stryker-mutator.io/robobar-example/reports/mutation/html/index.html)
+				</section>
+				
+        <section data-markdown>
+					## Supported mutations
+					
+					- Arithmetic Operator
+					- Array Declaration
+					- Assignment Expression
+					- Block Statement
+					- Boolean / String Literals
+					- Conditional Expression
+					- Logical / Equality Operator
+					- Unary Operator
+					- Update Operator
+					- ...and other mutation extension
+					
+					[full extensive list](https://github.com/stryker-mutator/stryker-handbook/blob/master/mutator-types.md)
+        </section>
+				
+				<section data-markdown>
+					## Mutant states
+					
+					- Killed
+					- Survived
+					- No coverage
+					- Timeout
+					- Runtime Error
+					- Compile error
+				</section>
+				
+				<section data-markdown>
+					## Metrics
+					
+					- Detected (killed+timeout)
+					- Undetected (survived + no coverage)
+					- Covered (detected+survived)
+					- Valid (detected + undetected)
+					- Invalid (runtime errors + compile errors)
+					- Total mutants (valid + invalid)
+					- Mutation score (detected / valid * 100)
+					- Mutation score based on covered code (detected / covered * 100)
+				</section>
+				
+        <section>
+					1st impression: <span class="fragment">- not great</span>
+        </section>
+        
+				
+        <section>
+          <h2>The concept is a hudge enabler</h2>
+					<p class="fragment">Automatic program repair<span class="fragment"> - after a large  code surface is coveraged and valiadted by mutation testing</span></p>
+        </section>
+					
+        </section>
+          
+          <section>
+            <h3>References</h3>
+            <ul>
+              <li><a href="https://esprima.org/" target="_blank">Esprima</a>
+              <li><a href="https://stryker-mutator.io/" target="_blank">Stryker</a>
+              <li><a href="https://www.youtube.com/watch?v=sRkfMe0_5cA" target="_blank">"Automatic Patch Generation" by Claire Le Goues</a>
+              <li><a href="https://dl.acm.org/citation.cfm?id=3339961" target="_blank">"SapFix: automated end-to-end repair at scale</a>
+            </ul>
+          </section>
+          
+        </section>
+        
+        <section>
+          <h3>Thanks for listening!</h3>
+          <p class="fragment">questions?</p>
+        </section>
+
+			</div>
+		</div>
+
+		<script src="../reveal/lib/js/head.min.js"></script>
+		<script src="../reveal/js/reveal.js"></script>
+
+		<script>
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				history: true,
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: '../reveal/plugin/markdown/marked.js' },
+					{ src: '../reveal/plugin/markdown/markdown.js' },
+					{ src: '../reveal/plugin/notes/notes.js', async: true },
+					{ src: '../reveal/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
